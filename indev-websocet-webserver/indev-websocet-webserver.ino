@@ -5,18 +5,18 @@
   copies or substantial portions of the Software.
 *********/
 
-
-
-
 // Import required libraries
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 
-
 // Replace with your network credentials
-const char* ssid     = "iphone"; // "Get-2G-350B21";
-const char* password = "the2020project"; // "7ECJBBAAHF";
+const char* ssid     = "Get-2G-350B21";
+const char* password = "7ECJBBAAHF";
+
+// mobilt hotspot
+// const char* ssid     = "iphone";
+// const char* password = "the2020project";
 
 bool ledState = 0;
 const int ledPin = 2;
@@ -25,21 +25,19 @@ const int ledPin = 2;
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
-
-
-
 const char index_html[] PROGMEM = R"rawliteral(
-<!DOCTYPE HTML><html>
+<!DOCTYPE html>
 <head>
+  <meta charset="utf-8">
   <title>ESP Web Server</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- what is this? <link rel="icon" href="data:,"> -->
 
-  <!-- fra GitHub via jsdeliver.com -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/badallmann/Innovasjonsprosjektet/styles.css">
-  <script defer src="https://rawgithubusercontent.com/badallmann/Innovasjonsprosjektet/main/script.js"></script>
+  <!-- promt external js file, adds style tag also, innerHTML. -->
+  <script defer src="http://192.168.0.131:8000/script.js"></script>
 
 </head>
-<body>
+<body ontouchstart="">
   <div class="topnav">
     <h1>ESP WebSocket Server</h1>
   </div>
@@ -53,10 +51,6 @@ const char index_html[] PROGMEM = R"rawliteral(
 </body>
 </html>
 )rawliteral";
-
-
-
-
 
 void notifyClients() {
   ws.textAll(String(ledState));

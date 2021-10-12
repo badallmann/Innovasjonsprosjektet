@@ -1,9 +1,3 @@
-// ekstern kode
-alert("ekstern kode ble lastet inn")
-
-
-
-
 // WEBSOCKET NETWORKING
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
@@ -42,3 +36,9 @@ function initButton() {
 function toggle(){
   websocket.send('toggle');
 }
+
+
+
+
+// ekstern kode
+alert("networking ble kjørt")
