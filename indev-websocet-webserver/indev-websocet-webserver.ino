@@ -35,8 +35,8 @@ const char index_html[] PROGMEM = R"rawliteral(
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- fra GitHub via jsdeliver.com -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/badallmann/Innovasjonsprosjektet/main.css">
-  <script defer src="https://rawgithubusercontent.com/badallmann/Innovasjonsprosjektet/main/ekstern-kode.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/badallmann/Innovasjonsprosjektet/styles.css">
+  <script defer src="https://rawgithubusercontent.com/badallmann/Innovasjonsprosjektet/main/script.js"></script>
 
 </head>
 <body>
