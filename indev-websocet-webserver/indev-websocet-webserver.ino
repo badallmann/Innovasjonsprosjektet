@@ -15,8 +15,8 @@
 
 
 // Replace with your network credentials
-const char* ssid     = "Get-2G-350B21";
-const char* password = "7ECJBBAAHF";
+const char* ssid     = "iphone"; // "Get-2G-350B21";
+const char* password = "the2020project"; // "7ECJBBAAHF";
 
 bool ledState = 0;
 const int ledPin = 2;
