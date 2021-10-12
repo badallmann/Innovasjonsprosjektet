@@ -36,7 +36,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 
   <!-- fra GitHub via jsdeliver.com -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/badallmann/Innovasjonsprosjektet/main.css">
-  <script defer src="https://cdn.jsdelivr.net/gh/badallmann/Innovasjonsprosjektet/ekstern-kode.js"></script>
+  <script defer src="https://rawgithubusercontent.com/badallmann/Innovasjonsprosjektet/main/ekstern-kode.js"></script>
 
 </head>
 <body>

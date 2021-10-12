@@ -4,7 +4,6 @@ alert("ekstern kode ble lastet inn")
 
 
 
-
 // WEBSOCKET NETWORKING
 var gateway = `ws://${window.location.hostname}/ws`;
 var websocket;
