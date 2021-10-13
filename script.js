@@ -67,9 +67,10 @@
 
   // build page
   bap(newText("ESP32 remote demo"))
-  bap(newButton("button1", "pinmode"))
-  bap(newButton("button2", "Trykk her"))
-  bap(newButton("button3", "Trykk her"))
+  bap(newButton("button1", "set pinmode"))
+  bap(newButton("button2", "digitalWrite"))
+  bap(newButton("button3", "off"))
+  bap(newButton("button2", "haha"))
 
 
 
@@ -98,16 +99,17 @@
 
     if (id == "button1") {
       highlightElm(id)
-      websocket.send("01p255")
+      websocket.send("002001000")
     }
     if (id == "button2") {
       highlightElm(id)
-      websocket.send("a02b")
+      websocket.send("002002001")
     }
     if (id == "button3") {
       highlightElm(id)
-      websocket.send("a03b")
+      websocket.send("002002000")
     }
+
   }
 
 

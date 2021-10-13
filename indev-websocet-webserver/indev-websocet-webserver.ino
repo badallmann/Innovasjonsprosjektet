@@ -14,7 +14,8 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <stdio.h> // ? memcopy, strncpy, sscanf
+#include <stdio.h> // sscanf
+#include <string.h> // strncpy (eller bruk memcpy++)
 
 
 
@@ -56,21 +57,42 @@ const char index_html[] PROGMEM = R"rawliteral(
   <body ontouchstart=""></body>
   </html>
 )rawliteral";
-void doSomething(int pin, char fn, int val) {
+void doSomething(int pin, int fn, int val) {
 
   // pinMode()
-  if ((char*)fn == "p") {
-    Serial.println("p was detected");
+  if (fn == 1) {
+    if (val == 0) {
+      pinMode(pin, OUTPUT);
+    }
+    else if (val == 1) {
+      pinMode(pin, INPUT);
+    }
+    else if (val == 2) {
+      pinMode(pin, INPUT-PULLUP);
+    }
+    Serial.println("pinmode was set");
   }
 
   // digitalWrite()
-  if ((char*)fn == "w") {}
+  if (fn == 2) {
+    if (val == 0) {
+      digitalWrite(pin, LOW);
+    }
+    else if (val == 1) {
+      digitalWrite(pin, HIGH);
+    }
+    Serial.println("digitalWrite did run");
+  }
 
   // analogWrite()
-  if ((char*)fn == "v") {}
+  if (fn == 3) {
+
+  }
 
   // analogRead()
-  if ((char*)fn == "r") {}
+  if (fn == 4) {
+
+  }
 
 
 
@@ -80,30 +102,33 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
     data[len] = 0;
 
-    // example message: "01a001"
-    // 01  = pin
-    // a   = function reference
-    // 001 = analog value
+    // example message: "003001255"
+    // 003 = pin
+    // 001 = function reference
+    // 255 = analog value
 
     // get receiverd message as char array
-    char msg[6];
+    char msg[9];
     memcpy(msg, (char*)data, len);
+
+    size_t num3 = 3;
 
     // get pin
     int pin;
-    char msgPin[2];
-    size_t num2 = 2;
-    strncpy(msgPin, msg + 0, num2);
+    char msgPin[3];
+    strncpy(msgPin, msg + 0, num3);
     sscanf(msgPin, "%d", &pin);
 
-    // get fn
-    char fn = msg[3];
+    // get fn ref
+    int fn;
+    char msgFn[3];
+    strncpy(msgFn, msg + 3, num3);
+    sscanf(msgFn, "%d", &fn);
 
     // get value
     int val;
     char msgVal[3];
-    size_t num3 = 3;
-    strncpy(msgVal, msg + 3, num3);
+    strncpy(msgVal, msg + 6, num3);
     sscanf(msgVal, "%d", &val);
 
     // test received data
