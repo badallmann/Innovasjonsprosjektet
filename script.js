@@ -67,9 +67,9 @@
 
   // build page
   bap(newText("ESP32 remote demo"))
-  bap(newButton("button1", "Button 1"))
-  bap(newButton("button2", "Button 2"))
-  bap(newButton("button3", "Button 3"))
+  bap(newButton("button1", "pinmode"))
+  bap(newButton("button2", "Trykk her"))
+  bap(newButton("button3", "Trykk her"))
 
 
 
@@ -98,7 +98,7 @@
 
     if (id == "button1") {
       highlightElm(id)
-      websocket.send("a01b")
+      websocket.send("01p255")
     }
     if (id == "button2") {
       highlightElm(id)
@@ -184,14 +184,16 @@
   highlightElm = (id) => {
     elm = document.getElementById(id)
     let defaultBackgroundColor = elm.style.backgroundColor
+    let defaultColor = elm.style.color
+    let defaultTextDecoration = elm.style.textDecoration
     elm.style.backgroundColor = "black"
+    elm.style.color = "white"
+    elm.style.textDecoration = "initial"
     setTimeout(() => {
       elm.style.backgroundColor = defaultBackgroundColor
+      elm.style.color = defaultColor
+      elm.style.textDecoration = defaultTextDecoration
     }, 100)
   }
 
-
-
 }
-
-

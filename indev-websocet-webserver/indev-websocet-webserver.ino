@@ -1,16 +1,25 @@
-/*********
+/***************************************************************
+  Credit:
   Rui Santos
-  Complete project details at https://RandomNerdTutorials.com/esp32-websocket-server-arduino/
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
-*********/
+  Complete project details at:
+  https://RandomNerdTutorials.com/esp32-websocket-server-arduino/
+  The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
+****************************************************************/
 
+
+
+
+// BIBLIOTEKER ––––––––––––––––––––––––––––––––-
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <stdio.h> // sscanf
-// #include <string.h> delete asap
+#include <stdio.h> // ? memcopy, strncpy, sscanf
 
+
+
+
+// WIFI ––––––––––––––––––––––––––––––––––––––––
 // hjemme hos Baslak
 const char* ssid     = "Get-2G-350B21";
 const char* password = "7ECJBBAAHF";
@@ -22,79 +31,92 @@ const char* password = "7ECJBBAAHF";
 
 
 
+// PINS ––––––––––––
+const int pin1 = 1;
+const int pin2 = 2;
+
+
+
+
+// NETTVERK –––––––––––––––––––––––––––––––––––––––
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
-
 const char index_html[] PROGMEM = R"rawliteral(
-<!DOCTYPE html>
-<head>
-  <meta charset="utf-8">
-  <title>ESP Web Server</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>ESP Web Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- custom external .js file -->
-  <script defer src="http://192.168.0.131:8000/script.js"></script>
+    <!-- custom external .js file -->
+    <script defer src="http://192.168.0.131:8000/script.js"></script>
 
-</head>
-<body ontouchstart=""></body>
-</html>
+  </head>
+  <body ontouchstart=""></body>
+  </html>
 )rawliteral";
+void doSomething(int pin, char fn, int val) {
 
-void notifyClients() {
-  // sends the same string to all clients
-  // ws.textAll(String(ledState));
+  // pinMode()
+  if ((char*)fn == "p") {
+    Serial.println("p was detected");
+  }
+
+  // digitalWrite()
+  if ((char*)fn == "w") {}
+
+  // analogWrite()
+  if ((char*)fn == "v") {}
+
+  // analogRead()
+  if ((char*)fn == "r") {}
+
+
+
 }
-
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
     data[len] = 0;
 
-    // CUSTOM C-KODE HERFRA (:
+    // example message: "01a001"
+    // 01  = pin
+    // a   = function reference
+    // 001 = analog value
 
     // get receiverd message as char array
-    char msg[4];
+    char msg[6];
     memcpy(msg, (char*)data, len);
 
-    // fn to perform
-    char fn = msg[0];
-
-    // pin number
+    // get pin
     int pin;
-    char msgTrimmed[2];
-    size_t nums = 2;
-    strncpy(msgTrimmed, msg + 1, nums);
-    sscanf(msgTrimmed, "%d", &pin);
+    char msgPin[2];
+    size_t num2 = 2;
+    strncpy(msgPin, msg + 0, num2);
+    sscanf(msgPin, "%d", &pin);
 
-    // pinmode value to set (if any)
-    char mode;
-    if (strlen(msg) > 3) {
-      mode = msg[3];
-    }
+    // get fn
+    char fn = msg[3];
 
-    // test receiving data
-    Serial.println(fn);
+    // get value
+    int val;
+    char msgVal[3];
+    size_t num3 = 3;
+    strncpy(msgVal, msg + 3, num3);
+    sscanf(msgVal, "%d", &val);
+
+    // test received data
+    Serial.println("New message:");
     Serial.println(pin);
-    Serial.println(mode);
+    Serial.println(fn);
+    Serial.println(val);
+    Serial.println("");
 
-
-
-    /*
-    bool ledState = 0;
-    const int ledPin = 2;
-    pinMode(ledPin, OUTPUT);
-    digitalWrite(ledPin, LOW);
-    analogWrite()
-    analogRead()
-    */
-
-
-
-
+    // next step
+    doSomething(pin, fn, val);
   }
 }
-
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type,
              void *arg, uint8_t *data, size_t len) {
   switch (type) {
@@ -112,22 +134,11 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
       break;
   }
 }
-
 void initWebSocket() {
   ws.onEvent(onEvent);
   server.addHandler(&ws);
 }
-
-
-
-
-
-void setup(){
-  // Serial port for debugging purposes
-  Serial.begin(115200);
-
-
-
+void nettverkSetup() {
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -148,12 +159,23 @@ void setup(){
   // Start server
   server.begin();
 }
+void nettverkLoop() {
+  // run every sec or so
+  ws.cleanupClients();
+}
+// send a string to all connected clients
+// ws.textAll(String(variable));
 
 
 
 
+// SETUP ––––––––––––––––––––––––––––––––––––––––
+void setup() {
+  Serial.begin(115200);
+  nettverkSetup();
+}
 
+// LOOP ––––––––––––––––––––––––––––––––––––––––
 void loop() {
-  ws.cleanupClients(); // run one per sec or so
-  // digitalWrite(ledPin, ledState);
+  nettverkLoop();
 }
