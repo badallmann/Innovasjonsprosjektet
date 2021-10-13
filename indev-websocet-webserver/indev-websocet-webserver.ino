@@ -5,21 +5,22 @@
   copies or substantial portions of the Software.
 *********/
 
-// Import required libraries
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <stdio.h> // sscanf
+// #include <string.h> delete asap
 
-// Replace with your network credentials
+// hjemme hos Baslak
 const char* ssid     = "Get-2G-350B21";
 const char* password = "7ECJBBAAHF";
 
-// mobilt hotspot
+// Baslaks mobil
 // const char* ssid     = "iphone";
 // const char* password = "the2020project";
 
-bool ledState = 0;
-const int ledPin = 2;
+
+
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -31,39 +32,66 @@ const char index_html[] PROGMEM = R"rawliteral(
   <meta charset="utf-8">
   <title>ESP Web Server</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- what is this? <link rel="icon" href="data:,"> -->
 
-  <!-- promt external js file, adds style tag also, innerHTML. -->
+  <!-- custom external .js file -->
   <script defer src="http://192.168.0.131:8000/script.js"></script>
 
 </head>
-<body ontouchstart="">
-  <div class="topnav">
-    <h1>ESP WebSocket Server</h1>
-  </div>
-  <div class="content">
-    <div class="card">
-      <h2>Output - GPIO 2</h2>
-      <p class="state">state: <span id="state">%STATE%</span></p>
-      <p><button id="button" class="button">Toggle</button></p>
-    </div>
-  </div>
-</body>
+<body ontouchstart=""></body>
 </html>
 )rawliteral";
 
 void notifyClients() {
-  ws.textAll(String(ledState));
+  // sends the same string to all clients
+  // ws.textAll(String(ledState));
 }
 
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
     data[len] = 0;
-    if (strcmp((char*)data, "toggle") == 0) {
-      ledState = !ledState;
-      notifyClients();
+
+    // CUSTOM C-KODE HERFRA (:
+
+    // get receiverd message as char array
+    char msg[4];
+    memcpy(msg, (char*)data, len);
+
+    // fn to perform
+    char fn = msg[0];
+
+    // pin number
+    int pin;
+    char msgTrimmed[2];
+    size_t nums = 2;
+    strncpy(msgTrimmed, msg + 1, nums);
+    sscanf(msgTrimmed, "%d", &pin);
+
+    // pinmode value to set (if any)
+    char mode;
+    if (strlen(msg) > 3) {
+      mode = msg[3];
     }
+
+    // test receiving data
+    Serial.println(fn);
+    Serial.println(pin);
+    Serial.println(mode);
+
+
+
+    /*
+    bool ledState = 0;
+    const int ledPin = 2;
+    pinMode(ledPin, OUTPUT);
+    digitalWrite(ledPin, LOW);
+    analogWrite()
+    analogRead()
+    */
+
+
+
+
   }
 }
 
@@ -90,18 +118,6 @@ void initWebSocket() {
   server.addHandler(&ws);
 }
 
-String processor(const String& var){ // empty. external js does UI
-  Serial.println(var);
-  if(var == "STATE"){
-    if (ledState){
-      return "ON";
-    }
-    else{
-      return "OFF";
-    }
-  }
-}
-
 
 
 
@@ -110,8 +126,7 @@ void setup(){
   // Serial port for debugging purposes
   Serial.begin(115200);
 
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+
 
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -127,7 +142,7 @@ void setup(){
 
   // Route for root / web page
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html, processor); // try omitt processor as arg
+    request->send_P(200, "text/html", index_html);
   });
 
   // Start server
@@ -139,6 +154,6 @@ void setup(){
 
 
 void loop() {
-  ws.cleanupClients(); // change to once per sec
-  digitalWrite(ledPin, ledState);
+  ws.cleanupClients(); // run one per sec or so
+  // digitalWrite(ledPin, ledState);
 }
