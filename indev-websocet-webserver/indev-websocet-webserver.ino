@@ -16,25 +16,19 @@
 #include <ESPAsyncWebServer.h>
 #include <stdio.h> // sscanf
 #include <string.h> // strncpy (eller bruk memcpy++)
+// FastLED lib
 
 
 
 
 // WIFI ––––––––––––––––––––––––––––––––––––––––
 // hjemme hos Baslak
-const char* ssid     = "Get-2G-350B21";
-const char* password = "7ECJBBAAHF";
+// const char* ssid     = "Get-2G-350B21";
+// const char* password = "7ECJBBAAHF";
 
 // Baslaks mobil
-// const char* ssid     = "iphone";
-// const char* password = "the2020project";
-
-
-
-
-// PINS ––––––––––––
-const int pin1 = 1;
-const int pin2 = 2;
+const char* ssid     = "iphone";
+const char* password = "the2020project";
 
 
 
@@ -48,16 +42,17 @@ const char index_html[] PROGMEM = R"rawliteral(
   <head>
     <meta charset="utf-8">
     <title>ESP Web Server</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1", maximum-scale=1>
 
     <!-- custom external .js file -->
-    <script defer src="http://192.168.0.131:8000/script.js"></script>
+    <script defer src="http://172.20.10.2:8000/script.js"></script>
 
   </head>
   <body ontouchstart=""></body>
   </html>
 )rawliteral";
 void doSomething(int pin, int fn, int val) {
+  // FUNKSJONER (# 1–999)
 
   // pinMode()
   if (fn == 1) {
@@ -84,16 +79,23 @@ void doSomething(int pin, int fn, int val) {
     Serial.println("digitalWrite did run");
   }
 
+
+
+
+  /*
   // analogWrite()
   if (fn == 3) {
-
+    analogWrite(pin, val);
+    Serial.println("analogWrite did run");
   }
 
   // analogRead()
   if (fn == 4) {
-
+    int reading = analogRead(pin);
+    ws.textAll(String(reading));
+    Serial.println("analogRead did run");
   }
-
+  */
 
 
 }

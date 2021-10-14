@@ -1,12 +1,5 @@
 // EKSTERNT SKRIPT
-
-
-
-
-
-
 // NETWORKING
-{
   var gateway = `ws://${window.location.hostname}/ws`;
   var websocket;
   window.addEventListener('load', onLoad);
@@ -22,6 +15,7 @@
   }
   function onOpen(event) {
     console.log('Connection opened');
+    defaultPinModes()
   }
   function onClose(event) {
     console.log('Connection closed');
@@ -31,16 +25,11 @@
     // handle message from websocket connection
     console.log("new websocket message received")
   }
-}
-
-
 
 
 
 
 // HTML
-{
-  // model
   const doc = document
   const body = doc.body
   bap = (elm) => {
@@ -56,73 +45,26 @@
     d.textContent = text
     return d
   }
-  newButton = (id, text) => {
+  newButton = (text, id) => {
     b = newDiv()
     b.className = "button"
-    b.id = id
     b.textContent = text
+    b.id = id
     return b
   }
-
-
-  // build page
-  bap(newText("ESP32 remote demo"))
-  bap(newButton("button1", "set pinmode"))
-  bap(newButton("button2", "digitalWrite"))
-  bap(newButton("button3", "off"))
-  bap(newButton("button2", "haha"))
-
-
-
-}
-
-
-
-
-
-
-// EVENT LISTENERS (EVENT DELEGATION)
-{
-  let isTouchDevice = false;
-
-  // raskere å bruke "touchstart" på mobil
-  window.document.addEventListener("touchstart", e => {
-    isTouchDevice = true
-    handleClickAndTouchEvent(e)
-  })
-  window.document.addEventListener("click", e => {
-    if (!isTouchDevice) { handleClickAndTouchEvent(e) }
-  })
-
-  handleClickAndTouchEvent = e => {
-    const id = e.target.id
-
-    if (id == "button1") {
-      highlightElm(id)
-      websocket.send("002001000")
+  // quickly add button with function and parameters to run
+  fnArr = []
+  fb = (text, fn, a=0, b=0, c=0) => {
+    bap(newButton(text, text))
+    fnArr[text] = () => {
+      fn(a, b, c)
     }
-    if (id == "button2") {
-      highlightElm(id)
-      websocket.send("002002001")
-    }
-    if (id == "button3") {
-      highlightElm(id)
-      websocket.send("002002000")
-    }
-
   }
-
-
-
-}
-
-
 
 
 
 
 // CSS
-{
   // static
   var styles = `
   *, *::before, *::after {
@@ -160,14 +102,6 @@
   /* background-color: black;
   color: white; */
 
-
-
-
-
-
-
-
-
   } input:focus, select:focus, textarea:focus, button:focus {
   outline: none;  /* disable focus highlighting */
 
@@ -178,9 +112,6 @@
   var styleSheet = document.createElement("style")
   styleSheet.innerText = styles
   document.head.appendChild(styleSheet)
-
-
-
 
   // dynamic
   highlightElm = (id) => {
@@ -198,4 +129,89 @@
     }, 100)
   }
 
-}
+
+
+
+// EVENTS
+  // raskere å bruke "touchstart" på mobil
+  let isTouchDevice = false;
+  window.document.addEventListener("touchstart", e => {
+    isTouchDevice = true
+    handleClickAndTouchEvent(e)
+  })
+  window.document.addEventListener("click", e => {
+    if (!isTouchDevice) { handleClickAndTouchEvent(e) }
+  })
+  handleClickAndTouchEvent = e => {
+    const elm = e.target
+    const tc = elm.textContent
+    const id = elm.id
+
+    // dynamisk css
+    if (elm.classList.contains("button")) {
+      highlightElm(id)
+    }
+
+    // run one of the stored fns
+    fnArr[tc]()
+  }
+
+
+
+
+// ESP INTERFACE
+  // protocol: websocket.send(msg)
+  // msg = string: pin# + function# + value (all integers)
+  // pin#      = 001, 002 etc.
+  // function# = 001, 002 etc.
+  // value     = 000 < value < 255
+  // example: websocket.send("002001255")
+
+  // model
+  newMsg = (pin, fn, value) => {
+    // input validation?
+    let msg = ""
+    msg += formatInt(pin)
+    msg += fn
+    msg += formatInt(value)
+    websocket.send(msg)
+  }
+  formatInt = int => {
+    let fInt = int.toString()
+    while (fInt.length != 3) {
+      fInt = "0" + fInt
+    }
+    return fInt
+  }
+
+  // arduino function replicas
+  pinMode = (pin, value) => {
+    let fn = "001"
+    newMsg(pin, fn, value)
+  }
+  digitalWrite = (pin, value) => {
+    let fn = "002"
+    newMsg(pin, fn, value)
+  }
+
+  /*
+  analogWrite = (pin, value) => {
+  }
+  analogRead = (pin) => {
+  }
+  */
+
+
+
+
+// SETUP
+  // pins
+  defaultPinModes = () => {
+    // built-in blue LED
+    pinMode(2, 0)
+  }
+
+  // build page
+  bap(newText("ESP32 remote"))
+  fb("built-in LED on", digitalWrite, 2, 1)
+  fb("built-in LED off", digitalWrite, 2, 0)
