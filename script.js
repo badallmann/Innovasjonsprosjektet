@@ -207,10 +207,9 @@
 
 
 // SETUP
-  // pins
+  // set pins. this runs on new connection
   defaultPinModes = () => {
-    // built-in blue LED
-    pinMode(2, 0)
+    pinMode(2, 0) // built-in blue LED as output
   }
 
   // build page
