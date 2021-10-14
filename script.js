@@ -159,7 +159,7 @@
 
 
 
-// ESP INTERFACE
+// ESP32 INTERFACE
   // protocol: websocket.send(msg)
   // msg = string: pin# + function# + value (all integers)
   // pin#      = 001, 002 etc.
@@ -168,14 +168,6 @@
   // example: websocket.send("002001255")
 
   // model
-  newMsg = (pin, fn, value) => {
-    // input validation?
-    let msg = ""
-    msg += formatInt(pin)
-    msg += fn
-    msg += formatInt(value)
-    websocket.send(msg)
-  }
   formatInt = int => {
     let fInt = int.toString()
     while (fInt.length != 3) {
@@ -184,13 +176,23 @@
     return fInt
   }
 
+  // interface
+  newMsg = (pin, fn, value) => {
+    // input validation?
+    let msg = ""
+    msg += formatInt(pin)
+    msg += formatInt(fn)
+    msg += formatInt(value)
+    websocket.send(msg)
+  }
+
   // arduino function replicas
   pinMode = (pin, value) => {
-    let fn = "001"
+    let fn = 1
     newMsg(pin, fn, value)
   }
   digitalWrite = (pin, value) => {
-    let fn = "002"
+    let fn = 2
     newMsg(pin, fn, value)
   }
 
