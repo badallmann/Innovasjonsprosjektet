@@ -29,7 +29,7 @@
 
 
 
-// HTML
+// HTML (MODEL)
   const doc = document
   const body = doc.body
   bap = (elm) => {
