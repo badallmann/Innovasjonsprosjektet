@@ -79,9 +79,6 @@ void doSomething(int pin, int fn, int val) {
     Serial.println("digitalWrite did run");
   }
 
-
-
-
   /*
   // analogWrite()
   if (fn == 3) {
@@ -96,6 +93,25 @@ void doSomething(int pin, int fn, int val) {
     Serial.println("analogRead did run");
   }
   */
+
+
+
+
+
+
+  // palette1
+  if (fn == 101) {
+    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, palette1, 255, LINEARBLEND);
+  }
+
+  // palette2
+  if (fn == 102) {
+    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, palette2, 255, LINEARBLEND);
+  }
+
+
+
+
 
 
 }
