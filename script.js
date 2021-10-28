@@ -210,9 +210,21 @@
   // set pins. this runs on new connection
   defaultPinModes = () => {
     pinMode(2, 0) // built-in blue LED as output
+
+    // test
+    setInterval(websocket.send("000102000"), 1000)
   }
 
   // build page
   bap(newText("ESP32 remote"))
+  bap(newText("Sett på hjemskjerm!"))
   fb("built-in LED on", digitalWrite, 2, 1)
   fb("built-in LED off", digitalWrite, 2, 0)
+  fb("palette1", newMsg, 0, 101)
+  fb("palette2", newMsg, 0, 102)
+  fb("palette3", newMsg, 0, 103)
+  fb("palette4", newMsg, 0, 104)
+  fb("palette5", newMsg, 0, 105)
+
+
+

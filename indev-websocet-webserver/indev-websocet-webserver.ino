@@ -16,24 +16,90 @@
 #include <ESPAsyncWebServer.h>
 #include <stdio.h> // sscanf
 #include <string.h> // strncpy (eller bruk memcpy++)
-// FastLED lib
+#include <FastLED.h>
 
 
 
 
-// WIFI ––––––––––––––––––––––––––––––––––––––––
-// hjemme hos Baslak
-// const char* ssid     = "Get-2G-350B21";
-// const char* password = "7ECJBBAAHF";
 
-// Baslaks mobil
-const char* ssid     = "iphone";
-const char* password = "the2020project";
+// FAST LED
+#define NUM_LEDS  45
+#define LED_PIN   12
+CRGB leds[NUM_LEDS];
+uint8_t paletteIndex = 0;
+CRGBPalette16 currentPalette; // settes dynamisk
+int fps;                      // settes dynamisk
+
+// Definér paletter her og legg dem til i 'NETTVERK/doSomething/bytt palette'.
+CRGBPalette16 palette1 = CRGBPalette16 (
+    CRGB::DarkViolet,
+    CRGB::DarkViolet,
+    CRGB::DarkViolet,
+    CRGB::DarkViolet,
+
+    CRGB::Magenta,
+    CRGB::Magenta,
+    CRGB::Linen,
+    CRGB::Linen,
+
+    CRGB::Magenta,
+    CRGB::Magenta,
+    CRGB::DarkViolet,
+    CRGB::DarkViolet,
+
+    CRGB::DarkViolet,
+    CRGB::DarkViolet,
+    CRGB::Linen,
+    CRGB::Linen
+);
+
+CRGBPalette16 palette2 = CRGBPalette16 (
+    CRGB::Orange,
+    CRGB::Yellow,
+    CRGB::Black,
+    CRGB::Black,
+
+    CRGB::Orange,
+    CRGB::Yellow,
+    CRGB::Black,
+    CRGB::Black,
+
+    CRGB::Orange,
+    CRGB::Yellow,
+    CRGB::Black,
+    CRGB::Black,
+
+    CRGB::Orange,
+    CRGB::Yellow,
+    CRGB::Black,
+    CRGB::Orange
+);
+
+CRGBPalette16 palette3;
+CRGBPalette16 palette4;
+CRGBPalette16 palette5;
+
+
+
 
 
 
 
 // NETTVERK –––––––––––––––––––––––––––––––––––––––
+
+
+// WiFi
+const char* ssid     = "iphone";
+const char* password = "the2020project";
+
+// Baslaks mobil
+// const char* ssid     = "iphone";
+// const char* password = "the2020project";
+
+// hjemme hos Baslak
+// const char* ssid     = "Get-2G-350B21";
+// const char* password = "7ECJBBAAHF";
+
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
@@ -41,8 +107,18 @@ const char index_html[] PROGMEM = R"rawliteral(
   <!DOCTYPE html>
   <head>
     <meta charset="utf-8">
-    <title>ESP Web Server</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1", maximum-scale=1>
+    <meta name="viewport" content="
+			width=device-width,
+			initial-scale=1.0,
+			maximum-scale=1.0,
+			user-scalable=no" /> <!-- viewport-fit=cover -->
+		<meta name="format-detection" content="telephone=no">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="apple-mobile-web-app-title" content="＊ ＊ ＊">
+
+    <title>ESP32 fjernkontroll</title>
+
 
     <!-- custom external .js file -->
     <script defer src="http://172.20.10.2:8000/script.js"></script>
@@ -79,39 +155,16 @@ void doSomething(int pin, int fn, int val) {
     Serial.println("digitalWrite did run");
   }
 
-  /*
-  // analogWrite()
-  if (fn == 3) {
-    analogWrite(pin, val);
-    Serial.println("analogWrite did run");
+  // bytt palette (FastLED).
+  if (fn == 101) { currentPalette = palette1; }
+  if (fn == 102) { currentPalette = palette2; }
+  if (fn == 103) { currentPalette = palette3; }
+  // ...
+
+  // endre hastighet
+  if (fn == 11) {
+    fps = val;
   }
-
-  // analogRead()
-  if (fn == 4) {
-    int reading = analogRead(pin);
-    ws.textAll(String(reading));
-    Serial.println("analogRead did run");
-  }
-  */
-
-
-
-
-
-
-  // palette1
-  if (fn == 101) {
-    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, palette1, 255, LINEARBLEND);
-  }
-
-  // palette2
-  if (fn == 102) {
-    fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, palette2, 255, LINEARBLEND);
-  }
-
-
-
-
 
 
 }
@@ -212,13 +265,31 @@ void nettverkLoop() {
 
 
 
+
+
+
+
 // SETUP ––––––––––––––––––––––––––––––––––––––––
 void setup() {
   Serial.begin(115200);
   nettverkSetup();
+
+
+  // FastLED
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setBrightness(50);
 }
 
 // LOOP ––––––––––––––––––––––––––––––––––––––––
 void loop() {
   nettverkLoop();
+
+  // FastLED
+  fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, currentPalette, 255, LINEARBLEND);
+
+  EVERY_N_MILLISECONDS(fps) {
+    paletteIndex++;
+  }
+
+  FastLED.show();
 }
