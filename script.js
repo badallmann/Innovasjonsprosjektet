@@ -102,6 +102,11 @@
   /* background-color: black;
   color: white; */
 
+  } .input { // ?
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+
   } input:focus, select:focus, textarea:focus, button:focus {
   outline: none;  /* disable focus highlighting */
 
@@ -196,12 +201,12 @@
     newMsg(pin, fn, value)
   }
 
-  /*
-  analogWrite = (pin, value) => {
+  // sett hastighet for paletteIndex++
+  setSpeed = () => {
+    d = doc.getElementById("delay").value
+    newMsg(000, 011, d)
   }
-  analogRead = (pin) => {
-  }
-  */
+
 
 
 
@@ -226,5 +231,14 @@
   fb("palette4", newMsg, 0, 104)
   fb("palette5", newMsg, 0, 105)
 
+  bap(doc.createElement("br"))
 
+  // add input field
+  {
+    let i = doc.createElement("input")
+    i.type = "number"
+    i.id = "delay"
+    bap(i)
+  }
 
+  fb("Sett hastighet", setSpeed)

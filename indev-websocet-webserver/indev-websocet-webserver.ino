@@ -87,7 +87,6 @@ CRGBPalette16 palette5;
 
 // NETTVERK –––––––––––––––––––––––––––––––––––––––
 
-
 // WiFi
 const char* ssid     = "iphone";
 const char* password = "the2020project";
