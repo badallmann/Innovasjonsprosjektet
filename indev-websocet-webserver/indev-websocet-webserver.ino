@@ -23,12 +23,12 @@
 
 
 // FAST LED
-#define NUM_LEDS  45
-#define LED_PIN   12
+#define NUM_LEDS 21 // før 45
+#define LED_PIN  12
 CRGB leds[NUM_LEDS];
 uint8_t paletteIndex = 0;
-CRGBPalette16 currentPalette; // settes dynamisk
-int fps;                      // settes dynamisk
+CRGBPalette16 currentPalette;  // settes dynamisk
+unsigned long msDelay = 1000;  // settes dynamisk
 
 // Definér paletter her og legg dem til i 'NETTVERK/doSomething/bytt palette'.
 CRGBPalette16 palette1 = CRGBPalette16 (
@@ -88,8 +88,8 @@ CRGBPalette16 palette5;
 // NETTVERK –––––––––––––––––––––––––––––––––––––––
 
 // WiFi
-const char* ssid     = "iphone";
-const char* password = "the2020project";
+const char* ssid     = "Get-2G-350B21";
+const char* password = "7ECJBBAAHF";
 
 // Baslaks mobil
 // const char* ssid     = "iphone";
@@ -104,30 +104,39 @@ AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 const char index_html[] PROGMEM = R"rawliteral(
   <!DOCTYPE html>
+  <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="
-			width=device-width,
-			initial-scale=1.0,
-			maximum-scale=1.0,
-			user-scalable=no" /> <!-- viewport-fit=cover -->
-		<meta name="format-detection" content="telephone=no">
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-		<meta name="apple-mobile-web-app-title" content="＊ ＊ ＊">
+      width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no" /> <!-- viewport-fit=cover -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Foajéen NRK">
 
-    <title>ESP32 fjernkontroll</title>
-
-
-    <!-- custom external .js file -->
-    <script defer src="http://172.20.10.2:8000/script.js"></script>
+    <title>Foajéen NRK</title>
 
   </head>
-  <body ontouchstart=""></body>
+  <body ontouchstart="">
+
+    <!-- prompt src external JS -->
+    <script>
+      script = document.createElement("script")
+      script.src = prompt("src script.js? mobil: http://172.20.10.2:8000/script.js", "http://192.168.0.131:8000/script.js")
+      script.defer = true
+      document.body.appendChild(script)
+
+      // store src somehow
+      window.jsSrc = script.src
+    </script>
+
+  </body>
   </html>
-)rawliteral";
+  )rawliteral";
 void doSomething(int pin, int fn, int val) {
-  // FUNKSJONER (# 1–999)
 
   // pinMode()
   if (fn == 1) {
@@ -162,7 +171,7 @@ void doSomething(int pin, int fn, int val) {
 
   // endre hastighet
   if (fn == 11) {
-    fps = val;
+    msDelay = val;
   }
 
 
@@ -286,9 +295,14 @@ void loop() {
   // FastLED
   fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, currentPalette, 255, LINEARBLEND);
 
+  /*
   EVERY_N_MILLISECONDS(fps) {
     paletteIndex++;
   }
+  */
 
+  paletteIndex++;
   FastLED.show();
+
+  delay(msDelay);
 }
