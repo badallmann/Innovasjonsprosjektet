@@ -27,8 +27,11 @@
 #define LED_PIN  12
 CRGB leds[NUM_LEDS];
 uint8_t paletteIndex = 0;
+CRGBPalette16 lightOff;
 CRGBPalette16 currentPalette;  // settes dynamisk
 unsigned long msDelay = 1000;  // settes dynamisk
+
+
 
 // Definér paletter her og legg dem til i 'NETTVERK/doSomething/bytt palette'.
 CRGBPalette16 palette1 = CRGBPalette16 (
@@ -76,8 +79,7 @@ CRGBPalette16 palette2 = CRGBPalette16 (
 );
 
 CRGBPalette16 palette3;
-CRGBPalette16 palette4;
-CRGBPalette16 palette5;
+
 
 
 
@@ -164,6 +166,7 @@ void doSomething(int pin, int fn, int val) {
   }
 
   // bytt palette (FastLED).
+  if (fn == 100) { currentPalette = lightOff; }
   if (fn == 101) { currentPalette = palette1; }
   if (fn == 102) { currentPalette = palette2; }
   if (fn == 103) { currentPalette = palette3; }
@@ -304,5 +307,6 @@ void loop() {
   paletteIndex++;
   FastLED.show();
 
+  Serial.println(msDelay);
   delay(msDelay);
 }
