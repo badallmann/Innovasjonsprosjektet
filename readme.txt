@@ -5,4 +5,4 @@ Feilsøking:
 -endre default promted lokasjon for skriptet, hos esp raw literal
 -riktig pin for tredje ledning
 -ledsa trenger nok strøm for å lyse i det hele tatt
--sjekk ip adresse som esp hoster ut på monitoren, baud 115000
+-sjekk ip adresse som esp hoster ut på monitoren, baud 115200
