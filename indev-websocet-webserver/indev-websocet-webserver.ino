@@ -1,4 +1,9 @@
 /***************************************************************
+  Innovasjonsprosjektet – Gruppe 7
+  Kode for ESP32
+
+  x
+
   Credit:
   Rui Santos
   Complete project details at:
@@ -21,20 +26,22 @@
 
 
 
-
-// FAST LED
-#define NUM_LEDS 21 // før 45
-#define LED_PIN  12
+// FAST LED ––––––––––––––––––––––––––––––––––––-
+#define NUM_LEDS 21 // antall LEDs pr stripe
+#define LED_PIN  12 // pin for tredje ledning, i tillegg til Vin og GND
 CRGB leds[NUM_LEDS];
 uint8_t paletteIndex = 0;
 CRGBPalette16 lightOff;
 CRGBPalette16 currentPalette;  // settes dynamisk
-unsigned long msDelay = 1000;  // settes dynamisk
+unsigned long msDelay = 1000;  // endres dynamisk
 
 
 
-// Definér paletter her og legg dem til i 'NETTVERK/doSomething/bytt palette'.
-CRGBPalette16 palette1 = CRGBPalette16 (
+
+// LYS-PROGRAM
+// ! Definér paletter her og legg dem til i 'NETTVERK/void doSomething/bytt palette'.
+
+CRGBPalette16 palette1 = CRGBPalette16 ( // Nytt på nytt
     CRGB::DarkViolet,
     CRGB::DarkViolet,
     CRGB::DarkViolet,
@@ -56,7 +63,7 @@ CRGBPalette16 palette1 = CRGBPalette16 (
     CRGB::Linen
 );
 
-CRGBPalette16 palette2 = CRGBPalette16 (
+CRGBPalette16 palette2 = CRGBPalette16 ( // Lindmo
     CRGB::Orange,
     CRGB::Yellow,
     CRGB::Black,
@@ -78,28 +85,23 @@ CRGBPalette16 palette2 = CRGBPalette16 (
     CRGB::Orange
 );
 
-CRGBPalette16 palette3;
+CRGBPalette16 palette3; // Kåss til kvelds
 
 
 
 
-
-
-
-
-// NETTVERK –––––––––––––––––––––––––––––––––––––––
-
+// NETTVERK ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 // WiFi
-const char* ssid     = "iphone";
-const char* password = "the2020project";
+  const char* ssid     = "iphone";
+  const char* password = "the2020project";
 
-// Baslaks mobil
-// const char* ssid     = "iphone";
-// const char* password = "the2020project";
+  // Baslaks mobil
+  // const char* ssid     = "iphone";
+  // const char* password = "the2020project";
 
-// hjemme hos Baslak
-// const char* ssid     = "Get-2G-350B21";
-// const char* password = "7ECJBBAAHF";
+  // hjemme hos Baslak
+  // const char* ssid     = "Get-2G-350B21";
+  // const char* password = "7ECJBBAAHF";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -127,7 +129,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     <!-- prompt src external JS -->
     <script>
       script = document.createElement("script")
-      script.src = prompt("src script.js? mobil: http://172.20.10.2:8000/script.js", "http://192.168.0.131:8000/script.js")
+      script.src = prompt("src script.js? default: baslaks hotspot, "http://172.20.10.2:8000/script.js")
       script.defer = true
       document.body.appendChild(script)
 
@@ -140,14 +142,14 @@ const char index_html[] PROGMEM = R"rawliteral(
   )rawliteral";
 void doSomething(int pin, int fn, int val) {
 
-  // bytt palette (FastLED).
+  // bytt palette (FastLED)
   if (fn == 100) { currentPalette = lightOff; }
   if (fn == 101) { currentPalette = palette1; }
   if (fn == 102) { currentPalette = palette2; }
   if (fn == 103) { currentPalette = palette3; }
   // ...
 
-  // endre blinkehastighet
+  // endre blinkehastighet (loop delay)
   if (fn == 11) {
     msDelay = val;
   }
@@ -273,11 +275,8 @@ void nettverkLoop() {
   ws.cleanupClients();
 }
 // send a string to all connected clients
-// ws.textAll(String(variable));
-
-
-
-
+  // ws.textAll(String(variable));
+// –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
 
@@ -287,28 +286,29 @@ void setup() {
   Serial.begin(115200);
   nettverkSetup();
 
-
   // FastLED
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   FastLED.setBrightness(50);
 }
 
+
+
+
 // LOOP ––––––––––––––––––––––––––––––––––––––––
 void loop() {
-  // kommunikasjon
-    nettverkLoop();
+  nettverkLoop();
 
   // sett lysprogram
   fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, currentPalette, 255, LINEARBLEND);
-
-  /*
-  EVERY_N_MILLISECONDS(fps) {
-    paletteIndex++;
-  }
-  */
-
-  paletteIndex++;
   FastLED.show();
+
+  // inkrementer LED-diode
+  paletteIndex++;
+  /* alternativt
+    EVERY_N_MILLISECONDS(fps) {
+      paletteIndex++;
+    }
+  */
 
   Serial.println(msDelay);
   delay(msDelay);
