@@ -140,31 +140,6 @@ const char index_html[] PROGMEM = R"rawliteral(
   )rawliteral";
 void doSomething(int pin, int fn, int val) {
 
-  // pinMode()
-  if (fn == 1) {
-    if (val == 0) {
-      pinMode(pin, OUTPUT);
-    }
-    else if (val == 1) {
-      pinMode(pin, INPUT);
-    }
-    else if (val == 2) {
-      pinMode(pin, INPUT-PULLUP);
-    }
-    Serial.println("pinmode was set");
-  }
-
-  // digitalWrite()
-  if (fn == 2) {
-    if (val == 0) {
-      digitalWrite(pin, LOW);
-    }
-    else if (val == 1) {
-      digitalWrite(pin, HIGH);
-    }
-    Serial.println("digitalWrite did run");
-  }
-
   // bytt palette (FastLED).
   if (fn == 100) { currentPalette = lightOff; }
   if (fn == 101) { currentPalette = palette1; }
@@ -172,10 +147,37 @@ void doSomething(int pin, int fn, int val) {
   if (fn == 103) { currentPalette = palette3; }
   // ...
 
-  // endre hastighet
+  // endre blinkehastighet
   if (fn == 11) {
     msDelay = val;
   }
+
+  // pinMode()
+    if (fn == 1) {
+      if (val == 0) {
+        pinMode(pin, OUTPUT);
+      }
+      else if (val == 1) {
+        pinMode(pin, INPUT);
+      }
+      else if (val == 2) {
+        pinMode(pin, INPUT-PULLUP);
+      }
+      Serial.println("pinmode was set");
+    }
+
+  // digitalWrite()
+    if (fn == 2) {
+      if (val == 0) {
+        digitalWrite(pin, LOW);
+      }
+      else if (val == 1) {
+        digitalWrite(pin, HIGH);
+      }
+      Serial.println("digitalWrite did run");
+    }
+
+
 
 
 }
@@ -183,42 +185,42 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
   AwsFrameInfo *info = (AwsFrameInfo*)arg;
   if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
     data[len] = 0;
+    size_t num3 = 3;
 
-    // example message: "003001255"
-    // 003 = pin
-    // 001 = function reference
-    // 255 = analog value
+    // protocoll explanation
+      // example message: "003001255"
+      // 003 = pin
+      // 001 = function reference
+      // 255 = analog value
 
     // get receiverd message as char array
     char msg[9];
     memcpy(msg, (char*)data, len);
 
-    size_t num3 = 3;
+    // get pin (ESP32 pin number)
+      int pin;
+      char msgPin[3];
+      strncpy(msgPin, msg + 0, num3);
+      sscanf(msgPin, "%d", &pin);
 
-    // get pin
-    int pin;
-    char msgPin[3];
-    strncpy(msgPin, msg + 0, num3);
-    sscanf(msgPin, "%d", &pin);
-
-    // get fn ref
-    int fn;
-    char msgFn[3];
-    strncpy(msgFn, msg + 3, num3);
-    sscanf(msgFn, "%d", &fn);
+    // get fn ref (function reference number)
+      int fn;
+      char msgFn[3];
+      strncpy(msgFn, msg + 3, num3);
+      sscanf(msgFn, "%d", &fn);
 
     // get value
-    int val;
-    char msgVal[3];
-    strncpy(msgVal, msg + 6, num3);
-    sscanf(msgVal, "%d", &val);
+      int val;
+      char msgVal[3];
+      strncpy(msgVal, msg + 6, num3);
+      sscanf(msgVal, "%d", &val);
 
     // test received data
-    Serial.println("New message:");
-    Serial.println(pin);
-    Serial.println(fn);
-    Serial.println(val);
-    Serial.println("");
+      Serial.println("New message:");
+      Serial.println(pin);
+      Serial.println(fn);
+      Serial.println(val);
+      Serial.println("");
 
     // next step
     doSomething(pin, fn, val);
@@ -293,9 +295,10 @@ void setup() {
 
 // LOOP ––––––––––––––––––––––––––––––––––––––––
 void loop() {
-  nettverkLoop();
+  // kommunikasjon
+    nettverkLoop();
 
-  // FastLED
+  // sett lysprogram
   fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, currentPalette, 255, LINEARBLEND);
 
   /*

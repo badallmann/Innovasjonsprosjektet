@@ -1,11 +1,8 @@
 /**************************
 Innovasjonsprosjektet – Gruppe 7
-
 Kildekode for nettsiden (JavaScript)
 Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon- og bildefiler.
 ***************************/
-
-
 
 
 // KOMMUNIKASJON MED ESP32
@@ -73,7 +70,7 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     return fInt
   }
 
-  // interface
+  // interface equal to receiving end in ESP code
   newMsg = (pin, fn, value) => {
     let msg = ""
     msg += formatInt(pin)
@@ -371,22 +368,22 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     })
 
     window.document.addEventListener("click", e => {
-      if (!isTouchDevice) { handleClickAndTouchEvent(e) }
+      if (!isTouchDevice) { handleClickAndTouchstartEvent(e) }
     })
 
     let LIGHT = false
 
-    handleClickAndTouchEvent = e => {
+    handleClickAndTouchstartEvent = e => {
       const elm = e.target
       const tc = elm.textContent
       const id = elm.id
       console.log(elm)
 
-      // pick light program
+      // velg lys-program
       if (elm.class == "lysbryter") {
         if (!LIGHT || !(LIGHT == elm.id)) {
-          if (id == "npn") {
-            websocket.send("000102000")
+          if (id == "npn") {  // Program for Nytt på nytt
+            newMsg("000", "102", "000") // == websocket.send("000102000")
             body.style.backgroundColor = "rgb(220, 120, 30)"
 
           } else if (elm.id == "lm") {
