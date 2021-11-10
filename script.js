@@ -26,10 +26,11 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     websocket.onclose   = onClose;
     websocket.onmessage = onMessage; // <-- add this line
   }
+  // TUDU
   function onOpen(event) {
     console.log('Connection opened');
     defaultPinModes()
-    resetPalette()
+    // resetPalette()
   }
   function onClose(event) {
     console.log('Connection closed');
@@ -48,13 +49,18 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
 
   // TUDO: set pins. this runs on new connection
   defaultPinModes = () => {
-    pinMode(2, 0) // built-in blue LED as output
+    // set built-in blue LED as output
+    pinMode(2, 0)
+
+    // flash blue LED
+    websocket.send("002002001")
+    setTimeout(()=>{websocket.send("002002000")}, 500) // off
   }
 
 
 
 
-// FORMULERING AV BESKJEDER TIL ESP32
+// BESKJEDER TIL ESP32
   // protocol: websocket.send(msg)
   // msg = string: pin# + function# + value (all integers)
   // pin#      = 001, 002 etc.
@@ -92,7 +98,7 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
 
   // sett hastighet for paletteIndex++
   setSpeed = value => {
-    let d = 31 - parseInt(value)
+    let d = 41 - parseInt(value)
     newMsg(0, 11, d)
   }
 
@@ -162,6 +168,10 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
       fn(a, b, c)
     }
   }
+  // set body height
+  // optional: on resize: window.addEventListener("resize", () => {setTimeout(setBodyHeight, 100)} )
+  setBodyHeight = () => { body.style.height = String(window.innerHeight) + "px" }
+
 
   // init
     setBodyHeight()
@@ -183,7 +193,7 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     }
 
   // header
-    ITEMS[1].textContent = "Foajéen NRK"
+    ITEMS[1].textContent = "Foajéen NRK 🥳"
 
   // controls:
     // A) imgs
@@ -213,8 +223,8 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
       slider = newElm("input")
       slider.type = "range"
       slider.min = "1"
-      slider.max = "30"
-      slider.value = "15"
+      slider.max = "40"
+      slider.value = "1"
       slider.id = "slider"
 
       sliderText = newText("blinkehastighet")
@@ -261,7 +271,7 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     transition: background-color 0.333s;
     color: white;
     background-color: black;
-
+    font-family: sans-serif;
 
 
 
@@ -331,10 +341,6 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     styleSheet.innerText = styles
     document.head.appendChild(styleSheet)
 
-  // calculated: set body height
-    setBodyHeight = () => { body.style.height = String(window.innerHeight) + "px" }
-    // optional: on resize: window.addEventListener("resize", () => {setTimeout(setBodyHeight, 100)} )
-
   // dynamic
     highlightElm = (id) => {
       elm = document.getElementById(id)
@@ -364,7 +370,7 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
 
     window.document.addEventListener("touchstart", e => {
       isTouchDevice = true
-      handleClickAndTouchEvent(e)
+      handleClickAndTouchstartEvent(e)
     })
 
     window.document.addEventListener("click", e => {

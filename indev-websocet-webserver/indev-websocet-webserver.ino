@@ -33,7 +33,7 @@ CRGB leds[NUM_LEDS];
 uint8_t paletteIndex = 0;
 CRGBPalette16 lightOff;
 CRGBPalette16 currentPalette;  // settes dynamisk
-unsigned long msDelay = 1000;  // endres dynamisk
+unsigned long msDelay = 40;  // endres dynamisk
 
 
 
@@ -129,7 +129,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     <!-- prompt src external JS -->
     <script>
       script = document.createElement("script")
-      script.src = prompt("src script.js? default: baslaks hotspot, "http://172.20.10.2:8000/script.js")
+      script.src = prompt("src script.js? default: baslaks hotspot", "http://172.20.10.2:8000/script.js")
       script.defer = true
       document.body.appendChild(script)
 
@@ -141,6 +141,8 @@ const char index_html[] PROGMEM = R"rawliteral(
   </html>
   )rawliteral";
 void doSomething(int pin, int fn, int val) {
+  Serial.println("message received");
+
 
   // bytt palette (FastLED)
   if (fn == 100) { currentPalette = lightOff; }
@@ -189,7 +191,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     data[len] = 0;
     size_t num3 = 3;
 
-    // protocoll explanation
+    // protocol explanation
       // example message: "003001255"
       // 003 = pin
       // 001 = function reference
@@ -200,29 +202,29 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len) {
     memcpy(msg, (char*)data, len);
 
     // get pin (ESP32 pin number)
-      int pin;
-      char msgPin[3];
-      strncpy(msgPin, msg + 0, num3);
-      sscanf(msgPin, "%d", &pin);
+    int pin;
+    char msgPin[3];
+    strncpy(msgPin, msg + 0, num3);
+    sscanf(msgPin, "%d", &pin);
 
     // get fn ref (function reference number)
-      int fn;
-      char msgFn[3];
-      strncpy(msgFn, msg + 3, num3);
-      sscanf(msgFn, "%d", &fn);
+    int fn;
+    char msgFn[3];
+    strncpy(msgFn, msg + 3, num3);
+    sscanf(msgFn, "%d", &fn);
 
     // get value
-      int val;
-      char msgVal[3];
-      strncpy(msgVal, msg + 6, num3);
-      sscanf(msgVal, "%d", &val);
+    int val;
+    char msgVal[3];
+    strncpy(msgVal, msg + 6, num3);
+    sscanf(msgVal, "%d", &val);
 
     // test received data
-      Serial.println("New message:");
-      Serial.println(pin);
-      Serial.println(fn);
-      Serial.println(val);
-      Serial.println("");
+    Serial.println("New message:");
+    Serial.println(pin);
+    Serial.println(fn);
+    Serial.println(val);
+    Serial.println("");
 
     // next step
     doSomething(pin, fn, val);
@@ -298,7 +300,7 @@ void setup() {
 void loop() {
   nettverkLoop();
 
-  // sett lysprogram
+  // oppdater lysprogram
   fill_palette(leds, NUM_LEDS, paletteIndex, 255 / NUM_LEDS, currentPalette, 255, LINEARBLEND);
   FastLED.show();
 
@@ -310,6 +312,6 @@ void loop() {
     }
   */
 
-  Serial.println(msDelay);
+  // blikehastighet
   delay(msDelay);
 }
