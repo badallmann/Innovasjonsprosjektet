@@ -90,8 +90,8 @@ CRGBPalette16 palette3;
 // NETTVERK –––––––––––––––––––––––––––––––––––––––
 
 // WiFi
-const char* ssid     = "Get-2G-350B21";
-const char* password = "7ECJBBAAHF";
+const char* ssid     = "iphone";
+const char* password = "the2020project";
 
 // Baslaks mobil
 // const char* ssid     = "iphone";
