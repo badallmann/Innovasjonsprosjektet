@@ -43,71 +43,71 @@ unsigned long msDelay = 40;  // endres dynamisk
 
 // Nytt på nytt
 CRGBPalette16 palette1 = CRGBPalette16 (
-    CRGB::OrangeRed,
-    CRGB::DarkOrange,
-    CRGB::Black,
-    CRGB::Black,
+  CRGB::DarkBlue,
+  CRGB::DarkBlue,
+  CRGB::Orange,
+  CRGB::DarkBlue,
 
-    CRGB::OrangeRed,
-    CRGB::DarkOrange,
-    CRGB::Black,
-    CRGB::Black,
+  CRGB::Navy,
+  CRGB::Navy,
+  CRGB::Maroon,
+  CRGB::Navy,
 
-    CRGB::OrangeRed,
-    CRGB::DarkOrange,
-    CRGB::Black,
-    CRGB::Black,
+  CRGB::DarkBlue,
+  CRGB::DarkBlue,
+  CRGB::DarkOrange,
+  CRGB::DarkBlue,
 
-    CRGB::OrangeRed,
-    CRGB::DarkOrange,
-    CRGB::Black,
-    CRGB::Black
+  CRGB::Navy,
+  CRGB::Navy,
+  CRGB::Purple,
+  CRGB::Navy
 );
 
 // Lindmo
 CRGBPalette16 palette2 = CRGBPalette16 (
-    CRGB::DarkBlue,
-    CRGB::DarkBlue,
-    CRGB::Orange,
-    CRGB::DarkBlue,
+  CRGB::OrangeRed,
+  CRGB::DarkOrange,
+  CRGB::Black,
+  CRGB::Black,
 
-    CRGB::Navy,
-    CRGB::Navy,
-    CRGB::Maroon,
-    CRGB::Navy,
+  CRGB::OrangeRed,
+  CRGB::DarkOrange,
+  CRGB::Black,
+  CRGB::Black,
 
-    CRGB::DarkBlue,
-    CRGB::DarkBlue,
-    CRGB::DarkOrange,
-    CRGB::DarkBlue,
+  CRGB::OrangeRed,
+  CRGB::DarkOrange,
+  CRGB::Black,
+  CRGB::Black,
 
-    CRGB::Navy,
-    CRGB::Navy,
-    CRGB::Purple,
-    CRGB::Navy
+  CRGB::OrangeRed,
+  CRGB::DarkOrange,
+  CRGB::Black,
+  CRGB::Black
 );
 
-Kåss til kvelds
+// Kåss til kvelds
 CRGBPalette16 palette3 = CRGBPalette16 (
-    CRGB::Indigo,
-    CRGB::Indigo,
-    CRGB::Black,
-    CRGB::Black,
+  CRGB::Indigo,
+  CRGB::Indigo,
+  CRGB::Black,
+  CRGB::Black,
 
-    CRGB::Navy,
-    CRGB::Navy,
-    CRGB::Black,
-    CRGB::Black,
+  CRGB::Navy,
+  CRGB::Navy,
+  CRGB::Black,
+  CRGB::Black,
 
-    CRGB::DarkViolet,
-    CRGB::DarkViolet,
-    CRGB::Black,
-    CRGB::Black,
+  CRGB::DarkViolet,
+  CRGB::DarkViolet,
+  CRGB::Black,
+  CRGB::Black,
 
-    CRGB::DarkBlue,
-    CRGB::DarkBlue,
-    CRGB::Black,
-    CRGB::Black
+  CRGB::DarkBlue,
+  CRGB::DarkBlue,
+  CRGB::Black,
+  CRGB::Black
 );
 
 
