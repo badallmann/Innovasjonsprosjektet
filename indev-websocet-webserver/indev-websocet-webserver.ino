@@ -41,51 +41,74 @@ unsigned long msDelay = 40;  // endres dynamisk
 // LYS-PROGRAM
 // ! Definér paletter her og legg dem til i 'NETTVERK/void doSomething/bytt palette'.
 
-CRGBPalette16 palette1 = CRGBPalette16 ( // Nytt på nytt
-    CRGB::DarkViolet,
-    CRGB::DarkViolet,
-    CRGB::DarkViolet,
-    CRGB::DarkViolet,
+// Nytt på nytt
+CRGBPalette16 palette1 = CRGBPalette16 (
+    CRGB::OrangeRed,
+    CRGB::DarkOrange,
+    CRGB::Black,
+    CRGB::Black,
 
-    CRGB::Magenta,
-    CRGB::Magenta,
-    CRGB::Linen,
-    CRGB::Linen,
+    CRGB::OrangeRed,
+    CRGB::DarkOrange,
+    CRGB::Black,
+    CRGB::Black,
 
-    CRGB::Magenta,
-    CRGB::Magenta,
-    CRGB::DarkViolet,
-    CRGB::DarkViolet,
+    CRGB::OrangeRed,
+    CRGB::DarkOrange,
+    CRGB::Black,
+    CRGB::Black,
 
-    CRGB::DarkViolet,
-    CRGB::DarkViolet,
-    CRGB::Linen,
-    CRGB::Linen
+    CRGB::OrangeRed,
+    CRGB::DarkOrange,
+    CRGB::Black,
+    CRGB::Black
 );
 
-CRGBPalette16 palette2 = CRGBPalette16 ( // Lindmo
+// Lindmo
+CRGBPalette16 palette2 = CRGBPalette16 (
+    CRGB::DarkBlue,
+    CRGB::DarkBlue,
     CRGB::Orange,
-    CRGB::Yellow,
-    CRGB::Black,
-    CRGB::Black,
+    CRGB::DarkBlue,
 
-    CRGB::Orange,
-    CRGB::Yellow,
-    CRGB::Black,
-    CRGB::Black,
+    CRGB::Navy,
+    CRGB::Navy,
+    CRGB::Maroon,
+    CRGB::Navy,
 
-    CRGB::Orange,
-    CRGB::Yellow,
-    CRGB::Black,
-    CRGB::Black,
+    CRGB::DarkBlue,
+    CRGB::DarkBlue,
+    CRGB::DarkOrange,
+    CRGB::DarkBlue,
 
-    CRGB::Orange,
-    CRGB::Yellow,
-    CRGB::Black,
-    CRGB::Orange
+    CRGB::Navy,
+    CRGB::Navy,
+    CRGB::Purple,
+    CRGB::Navy
 );
 
-CRGBPalette16 palette3; // Kåss til kvelds
+Kåss til kvelds
+CRGBPalette16 palette3 = CRGBPalette16 (
+    CRGB::Indigo,
+    CRGB::Indigo,
+    CRGB::Black,
+    CRGB::Black,
+
+    CRGB::Navy,
+    CRGB::Navy,
+    CRGB::Black,
+    CRGB::Black,
+
+    CRGB::DarkViolet,
+    CRGB::DarkViolet,
+    CRGB::Black,
+    CRGB::Black,
+
+    CRGB::DarkBlue,
+    CRGB::DarkBlue,
+    CRGB::Black,
+    CRGB::Black
+);
 
 
 
