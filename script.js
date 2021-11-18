@@ -108,6 +108,22 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     setTimeout(()=>{websocket.send('000011015')}, 500)
   }
 
+  // lyd
+  audioChange = id => {
+    // stop
+    npn_audio.pause()
+    lm_audio.pause()
+    ktk_audio.pause()
+
+    // reset
+    npn_audio.src = npn_audio.src
+    lm_audio.src = lm_audio.src
+    ktk_audio.src = ktk_audio.src
+
+    // play if specified
+    if (id != null) { id.play() }
+  }
+
 
 
 
@@ -199,7 +215,7 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     // A) imgs
       // model
         imgPath = (fileName) => {
-          return window.jsSrc.replace('script.js', '') + 'assets/' + fileName
+          return window.jsSrc.replace('script.js', '') + 'assets/images/' + fileName
         }
         newImgFrame = (src, alt, id) => {
           img = newElm('img')
@@ -237,6 +253,26 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
 
   // footer
     ITEMS[3].textContent = "Gruppe 7 © 2021"
+
+  // audio
+  newAudioElm = (id, filename) => {
+    let elm = doc.createElement('audio')
+    elm.id = id
+    elm.src = window.jsSrc.replace("script.js", "") + "assets/audio/" + filename
+    elm.controls = true
+    return elm
+  }
+  let npn_audio = newAudioElm('npn_audio', 'npn.mp3')
+  let lm_audio = newAudioElm('lm_audio', 'lm.mp3')
+  let ktk_audio = newAudioElm('ktk_audio', 'ktk.mp3')
+  let audioContainer = newDiv()
+  audioContainer.append(npn_audio)
+  audioContainer.append(lm_audio)
+  audioContainer.append(ktk_audio)
+  body.append(audioContainer)
+
+
+
 
 
 
@@ -334,6 +370,14 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
 
 
 
+
+    /* AUDIO */
+    } audio {
+    display: none;
+
+
+
+
     }`
 
   // attach static to page
@@ -391,14 +435,17 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
           if (id == "npn") {  // Program for Nytt på nytt
             newMsg("000", "102", "000") // == websocket.send("000102000")
             body.style.backgroundColor = "rgb(220, 120, 30)"
+            audioChange(npn_audio)
 
           } else if (elm.id == "lm") {
             websocket.send("000101000")
             body.style.backgroundColor = "rgb(11, 80, 152)"
+            audioChange(lm_audio)
 
           } else if (elm.id == "ktk") {
             websocket.send("000103000")
             body.style.backgroundColor = "rgb(220, 20, 126)"
+            audioChange(ktk_audio)
           }
           LIGHT = elm.id
 
@@ -406,6 +453,7 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
           LIGHT = false
           websocket.send("000100000")
           body.style.backgroundColor = "black"
+          audioChange(null)
         }
       }
 
