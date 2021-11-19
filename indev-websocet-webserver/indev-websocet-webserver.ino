@@ -179,6 +179,14 @@ void doSomething(int pin, int fn, int val) {
     msDelay = val;
   }
 
+  // !BETA endre lysstyrke
+  if (fn == 12) {
+    FastLED.setBrightness(val);
+  }
+
+
+
+
   // pinMode()
     if (fn == 1) {
       if (val == 0) {
@@ -313,7 +321,7 @@ void setup() {
 
   // FastLED
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
-  FastLED.setBrightness(100);
+  FastLED.setBrightness(50);
 }
 
 
