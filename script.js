@@ -135,7 +135,7 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     link.rel = rel
     if (sizes) { link.sizes = sizes }
     if (type) { link.type = type }
-    link.href = window.jsSrc.replace("script.js", "") + "assets/" + fileName
+    link.href = window.jsSrc.replace("script.js", "") + "assets/icons/" + fileName
     document.head.appendChild(link)
   }
 
