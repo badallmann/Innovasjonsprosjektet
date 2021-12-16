@@ -115,16 +115,8 @@ CRGBPalette16 palette3 = CRGBPalette16 (
 
 // NETTVERK ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 // WiFi
-  const char* ssid     = "iphone";
-  const char* password = "the2020project";
-
-  // Baslaks mobil
-  // const char* ssid     = "iphone";
-  // const char* password = "the2020project";
-
-  // hjemme hos Baslak
-  // const char* ssid     = "Get-2G-350B21";
-  // const char* password = "7ECJBBAAHF";
+  const char* ssid     = "";
+  const char* password = "";
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -321,7 +313,7 @@ void setup() {
 
   // FastLED
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
-  FastLED.setBrightness(100);
+  FastLED.setBrightness(80);
 }
 
 

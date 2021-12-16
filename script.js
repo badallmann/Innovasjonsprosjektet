@@ -139,10 +139,10 @@ Kjøres sammen med index.html servert fra ESPAsyncWebServer på ESP32 samt ikon-
     document.head.appendChild(link)
   }
 
-  // eqv. HTML <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  // eqv. HTML: <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   newLink("apple-touch-icon", "180x180", false, "apple-touch-icon.png")
 
-  // eqv. HTML <link rel="icon" sizes="32x32" type="image/png" href="assets/favicon-32x32.png">
+  // eqv. HTML: <link rel="icon" sizes="32x32" type="image/png" href="assets/favicon-32x32.png">
   newLink("icon", "32x32", "image/png", "favicon-32x32.png")
 
 
